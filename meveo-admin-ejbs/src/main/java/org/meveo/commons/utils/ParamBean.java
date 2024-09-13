@@ -214,6 +214,11 @@ public class ParamBean {
 		return multiTenancyEnabled;
 	}
 
+    public boolean isProductionInstance() {
+        String environment = getProperty("meveo.environment", "development");
+        return "production".equalsIgnoreCase(environment);
+    }
+
 	/**
 	 * Get a file directory root for a given provider
 	 * 
