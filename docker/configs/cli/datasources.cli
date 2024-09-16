@@ -39,6 +39,35 @@ data-source add --name=meveo \
     --idle-timeout-minutes=15 \
     --share-prepared-statements=true
 
+# Add a odoo datasource
+data-source add --name=odoo \
+    --jndi-name=java:jboss/datasources/OdooDatasource \
+    --enabled=true \
+    --jta=true \
+    --use-java-context=true \
+    --use-ccm=false \
+        --spy=false \
+        --statistics-enabled=false \
+        --tracking=false \
+        --connection-url=jdbc:postgresql://${odoo.admin.server.name}:${odoo.admin.port.number}/${odoo.admin.database.name} \
+        --driver-name=${odoo.admin.database.driver} \
+        --new-connection-sql="select 1" \
+        --transaction-isolation=TRANSACTION_READ_COMMITTED \
+    --min-pool-size=5 \
+    --max-pool-size=10 \
+    --pool-prefill=false \
+    --pool-use-strict-min=false \
+    --flush-strategy=FailingConnectionOnly \
+    --user-name=${odoo.admin.database.username} \
+    --password=${odoo.admin.database.password} \
+    --valid-connection-checker-class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker" \
+    --validate-on-match=true \
+    --background-validation=false \
+    --use-fast-fail=true \
+    --exception-sorter-class-name="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter" \
+    --blocking-timeout-wait-millis=60000 \
+    --idle-timeout-minutes=15 \
+    --share-prepared-statements=true
 
 #/subsystem=datasources/xa-data-source=meveo:add( \
 #    driver-name="postgresql", \

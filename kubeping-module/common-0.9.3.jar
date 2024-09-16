@@ -1,0 +1,69 @@
+<!--
+
+ Copyright 2018-present Sonatype, Inc.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<!doctype html>
+<html lang="en">
+<head>
+ <!-- Google Analytics -->
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-101097570-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-101097570-3');
+  </script>
+
+  <!-- End Google Analytics -->
+
+  <!-- Google Tag Manager -->
+
+  <script async src="https://www.googleoptimize.com/optimize.js?id=OPT-MVB5Z4F"></script>
+  
+  <!-- End Google Tag Manager -->
+
+  <!-- Marketo Integration -->
+
+  <script type="text/javascript" src="https://cdn.bizible.com/scripts/bizible.js" async=""></script>
+
+  <!-- End Marketo Integration -->
+
+  <meta charset="utf-8">
+  <meta name="theme-color" content="#336699"/>
+  <meta name="description" content="Official search by the maintainers of Maven Central Repository">
+  <link rel="manifest" href="manifest.json"/>
+  <title>Maven Central Repository Search</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link id="canonicalLink">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=3">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link type="application/opensearchdescription+xml" rel="search"
+        href="open-search-description.xml"/>
+  <script type="application/ld+json" id="structured-data"></script>
+<link rel="stylesheet" href="styles.b9a1d4ce4142f01c3015.css"></head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MKC84ZM"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <app-root></app-root>
+  <noscript>Sorry, your browser does not support JavaScript!</noscript>
+<script src="runtime-es2015.d1d876fdaa3afcc0ef37.js" type="module"></script><script src="polyfills-es2015.6af935d4ee90fe76706b.js" type="module"></script><script src="runtime-es5.6a750ea508b6da6af97e.js" nomodule defer></script><script src="polyfills-es5.587224fe788178197934.js" nomodule defer></script><script src="main-es2015.6bc0f3c12b3a05469c87.js" type="module"></script><script src="main-es5.83161ccbd1c7755cc750.js" nomodule defer></script></body>
+</html>

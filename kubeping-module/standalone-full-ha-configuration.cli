@@ -1,0 +1,10 @@
+# $WILDFLY_HOME/bin/jboss-cli.sh --file=/path/to/this/file.
+embed-server --server-config=standalone-full-ha.xml
+run-batch --file=/opt/jboss/wildfly/cli/keycloak.cli
+run-batch --file=/opt/jboss/wildfly/cli/system-properties.cli
+run-batch --file=/opt/jboss/wildfly/cli/meveo-caches.cli
+run-batch --file=/opt/jboss/wildfly/cli/datasources.cli
+run-batch --file=/opt/jboss/wildfly/cli/email.cli
+run-batch --file=/opt/jboss/wildfly/cli/logging.cli
+run-batch --file=/opt/jboss/wildfly/cli/reverse-proxy.cli
+run-batch --file=/opt/jboss/wildfly/cli/deploy-scanner.cli

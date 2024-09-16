@@ -1,0 +1,20 @@
+# Configure CONSOLE handler
+/subsystem=logging/console-handler=CONSOLE:write-attribute(name=level, value="DEBUG")
+
+# Configure FILE handler
+/subsystem=logging/periodic-rotating-file-handler=FILE:remove
+/subsystem=logging/size-rotating-file-handler=FILE:add( \
+    autoflush=true, \
+    named-formatter=PATTERN, \
+    file={path="server.log", relative-to="jboss.server.log.dir"}, \
+    encoding="UTF-8", \
+    level="${env.WILDFLY_LOG_FILE_LEVEL}", \
+    rotate-size=100m, \
+    max-backup-index=5 \
+)
+
+# Add a logger for meveo class
+/subsystem=logging/logger=org.meveo:add(level="DEBUG"")
+
+# Remove hibernate logs
+/subsystem=logging/logger=org.hibernate.engine.jdbc.spi.SqlExceptionHelper:add(level="OFF")
