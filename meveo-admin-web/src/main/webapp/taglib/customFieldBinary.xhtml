@@ -43,34 +43,34 @@
 		value="#{prefix}_#{fn:replace(cft.code, ' ','_')}_" />
 	<c:set var="dlgBinary" value="#{fieldPrefix}_dlgBinary" />
 	<c:set var="viewBinaryId" value="#{fieldPrefix}viewBinaryValue" />
-	
+
 	<hftl:decorateFormField for="#{fieldPrefix}viewBinaryValue"
 		label="#{cft.description}#{cft.valueRequired?' *':''}"
-		componentWidth="100" displayOneLine="false">
+		componentWidth="100" displayOneLine="false" >
+		<p:outputPanel >
+			<h:outputText title="#{field.binaryValue.fileName}"
+						  value="#{of:abbreviate(field.stringValue, 25)}"></h:outputText>
+			<p:commandButton ajax="false" rendered="#{field.binaryValue != null}"
+							 onclick="PrimeFaces.monitorDownload(start, stop);"
+							 icon="fa fa-arrow-down" immediate="true">
+				<span>#{field.binaryValue.fileName}</span>
+				<p:fileDownload
+						value="#{customFieldDataEntryBean.downloadFile(field, field.binaryValue.fileName)}">
+				</p:fileDownload>
+			</p:commandButton>
+			<p:inputText id="#{viewBinaryId}" type="hidden"
+						 value="#{field.stringValue}"></p:inputText>
 
-		<h:outputText title="#{field.binaryValue.fileName}"
-			value="#{of:abbreviate(field.stringValue, 25)}"></h:outputText>
-		<p:commandButton ajax="false" rendered="#{field.binaryValue != null}"
-			onclick="PrimeFaces.monitorDownload(start, stop);"
-			icon="fa fa-arrow-down" immediate="true">
-			<span>#{field.binaryValue.fileName}</span>
-			<p:fileDownload
-				value="#{customFieldDataEntryBean.downloadFile(field, field.binaryValue.fileName)}">
-			</p:fileDownload>
-		</p:commandButton>
-		<p:inputText id="#{viewBinaryId}" type="hidden"
-			value="#{field.stringValue}"></p:inputText>
-
-		<p:fileUpload id="#{fieldPrefix}FileUpload-#{cft.code}"
-					uuid="#{entity.uuid}" cft="#{cft}" cfv="#{field}" cetCode="#{entity.cetCode}"
-					value="#{customFieldDataEntryBean.binaries[cft.code]}"
-					mode="advanced" auto="true" skinSimple="true" 
-					process="@this"
-					update="@form"
-					fileUploadListener="#{customFieldDataEntryBean.handleFileUpload}"
-					required="#{cft.valueRequired and !hasInheritedValue}"
-					rendered="#{edit and !disabled}" label="#{cft.description}" />
-					
+			<p:fileUpload id="#{fieldPrefix}FileUpload-#{cft.code}"
+						  uuid="#{entity.uuid}" cft="#{cft}" cfv="#{field}" cetCode="#{entity.cetCode}"
+						  value="#{customFieldDataEntryBean.binaries[cft.code]}"
+						  mode="advanced" auto="true" skinSimple="true"
+						  process="@this"
+						  update="@parent"
+						  fileUploadListener="#{customFieldDataEntryBean.handleFileUpload}"
+						  required="#{cft.valueRequired and !hasInheritedValue}"
+						  rendered="#{edit and !disabled}" label="#{cft.description}" />
+		</p:outputPanel>
 	</hftl:decorateFormField>
 
 
