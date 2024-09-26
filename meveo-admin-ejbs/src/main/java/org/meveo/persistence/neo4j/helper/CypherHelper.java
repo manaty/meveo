@@ -16,16 +16,29 @@
 
 package org.meveo.persistence.neo4j.helper;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.inject.Inject;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.meveo.model.CustomEntity;
 import org.meveo.model.persistence.DBStorageType;
+import org.meveo.model.persistence.JacksonUtil;
 import org.meveo.persistence.CrossStorageTransaction;
 import org.meveo.service.storage.RepositoryService;
+import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Transaction;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.internal.InternalNode;
+import org.neo4j.driver.internal.types.TypeConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +98,35 @@ public class CypherHelper {
 
     public void execute(String neo4jConfiguration,  String request, Map<String, Object> parameters){
         execute(neo4jConfiguration, request, parameters, null, null);
+    }
+    
+    public <T> List<T> execute(String neo4jConfiguration,  String request, Map<String, Object> parameters, Class<T> entityClass){
+    	
+    	CypherResultTransformer<List<T> > cypherResultTransformer = new CypherResultTransformer<List<T> >() {
+			
+			@Override
+			public List<T> execute(Transaction transaction, Result result) {
+				List<T> output = new ArrayList<T>();
+				while(result.hasNext()) {
+						Record record = result.next();
+						List<Value> elements = record.values();
+						for(Value elem : elements) {
+							Map<String, Object> props = elem.asMap();
+							try {
+								T entity = entityClass.getConstructor().newInstance();
+								BeanUtils.populate(entity, props);
+								output.add(entity);
+							} catch (InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException | NoSuchMethodException | SecurityException e) {
+								log.error("Couldn't populate entity " + entityClass.toString(), e);
+								continue;
+							}
+						}
+					}
+				
+				return output;
+			}
+		}; 
+        return execute(neo4jConfiguration, request, parameters, cypherResultTransformer, null);
     }
 
     @SuppressWarnings("javadoc")
