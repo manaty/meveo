@@ -256,4 +256,11 @@
 		<dropColumn tableName="git_repository" columnName="auto_pull" />
 	</changeSet>
 
+	<changeSet id="allow CFT on Module entity #625" author="Nhan Mai">
+		<addColumn tableName="meveo_module">
+			<column name="cf_values" type="text"/>
+			<column name="uuid" type="varchar(255)" />
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

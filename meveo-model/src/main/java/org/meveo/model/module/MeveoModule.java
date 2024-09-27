@@ -3,10 +3,12 @@ package org.meveo.model.module;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -38,11 +40,15 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.meveo.model.BusinessEntity;
+import org.meveo.model.CustomFieldEntity;
 import org.meveo.model.ExportIdentifier;
+import org.meveo.model.ICustomFieldEntity;
 import org.meveo.model.ModuleItem;
 import org.meveo.model.ModuleItemOrder;
 import org.meveo.model.ObservableEntity;
+import org.meveo.model.crm.custom.CustomFieldValues;
 import org.meveo.model.git.GitRepository;
+import org.meveo.model.persistence.CustomFieldValuesConverter;
 import org.meveo.model.scripts.ScriptInstance;
 import org.meveo.model.storage.Repository;
 
@@ -56,6 +62,7 @@ import org.meveo.model.storage.Repository;
  */
 @Entity
 @ObservableEntity
+@CustomFieldEntity(cftCodePrefix = "MODULE")
 @ModuleItem(value = "Module", path = "")
 @ModuleItemOrder(300)
 @ExportIdentifier({ "code"})
@@ -64,7 +71,7 @@ import org.meveo.model.storage.Repository;
 @NamedQueries({@NamedQuery(name = "MeveoModule.deleteModule", query = "DELETE from MeveoModule m where m.id=:id and m.version=:version")})
 @Inheritance(strategy = InheritanceType.JOINED)
 @SecondaryTable(name = "meveo_module_source", pkJoinColumns = @PrimaryKeyJoinColumn(referencedColumnName = "id"))
-public class MeveoModule extends BusinessEntity  {
+public class MeveoModule extends BusinessEntity implements ICustomFieldEntity {
 	
 	public static final String VERSION_PATTERN = "^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)[^\\s]*$"; 
 
@@ -145,6 +152,15 @@ public class MeveoModule extends BusinessEntity  {
     @Type(type = "numeric_boolean")
     @Column(name = "auto_commit")
     private boolean autoCommit = false;
+
+    @Column(name = "uuid", nullable = false, updatable = false, length = 60)
+    @Size(max = 60)
+    @NotNull
+    private String uuid = UUID.randomUUID().toString();
+
+    @Convert(converter = CustomFieldValuesConverter.class)
+    @Column(name = "cf_values", columnDefinition = "text")
+    private CustomFieldValues cfValues;
     
     @PrePersist()
     @PreUpdate()
@@ -372,6 +388,42 @@ public class MeveoModule extends BusinessEntity  {
 	public void setRepositories(List<Repository> repositories) {
 		this.repositories = repositories;
 	}
+
+    @Override
+    public String getUuid() {
+        return uuid;
+    }
+
+    @Override
+    public String clearUuid() {
+        String oldUuid = uuid;
+        uuid = UUID.randomUUID().toString();
+        return oldUuid;
+    }
+
+    @Override
+    public ICustomFieldEntity[] getParentCFEntities() {
+        return null;
+    }
+
+    @Override
+    public CustomFieldValues getCfValues() {
+        return cfValues;
+    }
+
+    @Override
+    public CustomFieldValues getCfValuesNullSafe() {
+        if (cfValues == null) {
+            cfValues = new CustomFieldValues();
+        }
+        return cfValues;
+    }
+
+    @Override
+    public void clearCfValues() {
+        cfValues = null;
+        
+    }
 
 
 }
