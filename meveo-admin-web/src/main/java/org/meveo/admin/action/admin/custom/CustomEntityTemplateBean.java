@@ -391,6 +391,51 @@ public class CustomEntityTemplateBean extends BackingCustomBean<CustomEntityTemp
 		}
 	}
 
+	public void addParentCFTs(CustomEntityTemplate parentCET) {
+
+		if (parentCET == null) {
+			return;
+		}
+
+		String parentCetPrefix = parentCET.getAppliesTo();
+
+		Map<String, CustomFieldTemplate> fields = customFieldTemplateService.findByAppliesToNoCache(parentCetPrefix);
+
+		if (parentCET != null && parentCET.getNeo4JStorageConfiguration() != null && parentCET.getNeo4JStorageConfiguration().isPrimitiveEntity()) {
+			fields.remove("value");
+		}
+		
+		for (CustomFieldTemplate field : fields.values()) {
+
+			// Init primitve types
+			if (!StringUtils.isBlank(field.getEntityClazz())) {
+				final String cetCode = CustomFieldTemplate.retrieveCetCode(field.getEntityClazz());
+				field.setPrimitiveType(customEntityTemplateService.getPrimitiveType(cetCode));
+			}
+		}
+
+		GroupedCustomField groupedCFTAndActions = new GroupedCustomField(fields.values(), "ParentCET", false);
+
+		// Append actions into the hierarchy of tabs and fieldgroups
+		Map<String, EntityCustomAction> customActions = entityActionScriptService.findByAppliesTo(parentCetPrefix);
+		groupedCFTAndActions.append(customActions.values());
+
+		// Create tabs
+		for (GroupedCustomField level1 : groupedCFTAndActions.getChildren()) {			
+			SortedTreeNode level1Node = new SortedTreeNode(level1.getType(), level1.getData(), groupedFields, level1.getType() == GroupedCustomFieldTreeItemType.tab, true);
+
+			// Create fields of field groups
+			for (GroupedCustomField level2 : level1.getChildren()) {
+				SortedTreeNode level2Node = new SortedTreeNode(level2.getType(), level2.getData(), level1Node, level2.getType() == GroupedCustomFieldTreeItemType.fieldGroup, true);
+
+				// Create fields
+				for (GroupedCustomField level3 : level2.getChildren()) {
+					new SortedTreeNode(level3.getType(), level3.getData(), level2Node, null, true);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Gets the fields.
 	 *
@@ -440,6 +485,8 @@ public class CustomEntityTemplateBean extends BackingCustomBean<CustomEntityTemp
 				}
 			}
 		}
+
+		this.addParentCFTs(entityTemplate.getSuperTemplate());
 
 		if (cachedTreeNodes != null && !cachedTreeNodes.isEmpty()) {
 			for (TreeNode tabNode : cachedTreeNodes) {// tab
@@ -1122,6 +1169,7 @@ public class CustomEntityTemplateBean extends BackingCustomBean<CustomEntityTemp
 	public class SortedTreeNode extends DefaultTreeNode {
 
 		private static final long serialVersionUID = 3694377290046737073L;
+		private boolean isDisplayOnly = false;
 
 		/**
 		 * Instantiates a new sorted tree node.
@@ -1138,11 +1186,17 @@ public class CustomEntityTemplateBean extends BackingCustomBean<CustomEntityTemp
 		 * @param parent   the parent
 		 * @param expanded the expanded
 		 */
-		public SortedTreeNode(GroupedCustomFieldTreeItemType type, Object data, TreeNode parent, Boolean expanded) {
+		public SortedTreeNode(GroupedCustomFieldTreeItemType type, Object data, TreeNode parent, Boolean expanded, boolean isDisplayOnly) {
 			super(type.name(), data, parent);
 			if (expanded != null && expanded) {
 				this.setExpanded(true);
 			}
+
+			this.isDisplayOnly = isDisplayOnly;
+		}
+
+		public SortedTreeNode(GroupedCustomFieldTreeItemType type, Object data, TreeNode parent, Boolean expanded) {
+			this(type, data, parent, expanded, false);
 		}
 
 		/**
@@ -1189,6 +1243,10 @@ public class CustomEntityTemplateBean extends BackingCustomBean<CustomEntityTemp
 				return guiPosition;
 			}
 			return null;
+		}
+
+		public boolean isDisplayOnly() {
+			return this.isDisplayOnly;
 		}
 
 		/**

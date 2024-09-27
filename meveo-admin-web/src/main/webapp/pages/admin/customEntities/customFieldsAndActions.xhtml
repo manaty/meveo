@@ -102,7 +102,7 @@
 						rendered="#{(node.type == 'field' or node.type == 'action') and entity.active != null and entity.active.toString() == 'false'}" />
 				</p:column>
 				<p:column headerText="#{messages['commons.actions']}" width="12%">
-					<h:panelGroup rendered="#{node.type == 'tab'}">
+					<h:panelGroup rendered="#{node.type == 'tab' and not node.isDisplayOnly()}">
 						<p:tooltip for="editTabBtn" value="#{messages['commons.edit']}"
 							showEffect="slide" hideEffect="slide" />
 						<p:commandButton id="editTabBtn" icon="ui-icon-document"
@@ -183,7 +183,7 @@
 							update=":fieldsForm:fields" rendered="#{node.canMoveDown()}" />
 					</h:panelGroup>
 
-					<h:panelGroup rendered="#{node.type == 'fieldGroup'}">
+					<h:panelGroup rendered="#{node.type == 'fieldGroup' and not node.isDisplayOnly()}">
 						<p:tooltip for="editFieldGroupBtn"
 							value="#{messages['commons.edit']}" showEffect="slide"
 							hideEffect="slide" />
@@ -239,7 +239,7 @@
 							update=":fieldsForm:fields" rendered="#{node.canMoveDown()}" />
 					</h:panelGroup>
 
-					<h:panelGroup rendered="#{node.type == 'field'}">
+					<h:panelGroup rendered="#{node.type == 'field' and not node.isDisplayOnly()}">
 
 						<p:tooltip for="editFieldBtn" value="#{messages['commons.edit']}"
 							showEffect="slide" hideEffect="slide" />
@@ -311,19 +311,21 @@
 							showEffect="slide" hideEffect="slide" />
 						<p:commandButton id="moveUpFBtn" icon="ui-icon-arrowthick-1-n"
 							action="#{customEntityTemplateBean.moveUp(node)}"
-							update=":fieldsForm:fields" rendered="#{node.canMoveUp()}" />
+							update=":fieldsForm:fields" 
+							rendered="#{node.canMoveUp()}" />
 
 						<p:tooltip for="moveDownFBtn"
 							value="#{messages['action.moveDown']}" showEffect="slide"
 							hideEffect="slide" />
 						<p:commandButton id="moveDownFBtn" icon="ui-icon-arrowthick-1-s"
 							action="#{customEntityTemplateBean.moveDown(node)}"
-							update=":fieldsForm:fields" rendered="#{node.canMoveDown()}" />
+							update=":fieldsForm:fields" 
+							rendered="#{node.canMoveDown()}" />
 
 					</h:panelGroup>
 
 
-					<h:panelGroup rendered="#{node.type == 'action'}">
+					<h:panelGroup rendered="#{node.type == 'action' and not node.isDisplayOnly()}">
 
 						<p:tooltip for="editActionBtn" value="#{messages['commons.edit']}"
 							showEffect="slide" hideEffect="slide" />
@@ -382,14 +384,16 @@
 							showEffect="slide" hideEffect="slide" />
 						<p:commandButton id="moveUpABtn" icon="ui-icon-arrowthick-1-n"
 							action="#{customEntityTemplateBean.moveUp(node)}"
-							update=":fieldsForm:fields" rendered="#{node.canMoveUp()}" />
+							update=":fieldsForm:fields" 
+							rendered="#{node.canMoveUp()}" />
 
 						<p:tooltip for="moveDownABtn"
 							value="#{messages['action.moveDown']}" showEffect="slide"
 							hideEffect="slide" />
 						<p:commandButton id="moveDownABtn" icon="ui-icon-arrowthick-1-s"
 							action="#{customEntityTemplateBean.moveDown(node)}"
-							update=":fieldsForm:fields" rendered="#{node.canMoveDown()}" />
+							update=":fieldsForm:fields" 
+							rendered="#{node.canMoveDown()}" />
 
 					</h:panelGroup>
 
